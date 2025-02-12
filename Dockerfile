@@ -13,6 +13,7 @@ RUN apk add --no-cache python3 make g++ \
 # Set environment variables for Puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PORT=10000
 
 # Build shared module
 WORKDIR /app
@@ -52,6 +53,10 @@ WORKDIR /app
 COPY start.sh .
 RUN chmod +x start.sh
 
-EXPOSE 3000 8000 4000
+# Create directory for JWT keys
+RUN mkdir -p /app/secrets
+COPY secrets/jwt/* /app/secrets/
+
+EXPOSE $PORT
 
 CMD ["./start.sh"] 
