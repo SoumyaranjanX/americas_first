@@ -2,9 +2,9 @@ services:
   # Web Frontend (Next.js)
   - type: web
     name: blitzy-web
-    env: node
-    buildCommand: cd web && npm install && npm run build
-    startCommand: cd web && npm start
+    env: docker
+    dockerContext: ./web
+    dockerfilePath: ./web/Dockerfile
     envVars:
       - key: NODE_ENV
         value: production
@@ -18,9 +18,9 @@ services:
   # API Gateway
   - type: web
     name: blitzy-api-gateway
-    env: node
-    buildCommand: cd api-gateway && npm install && npm run build
-    startCommand: cd api-gateway && npm start
+    env: docker
+    dockerContext: .
+    dockerfilePath: api-gateway/Dockerfile
     envVars:
       - key: NODE_ENV
         value: production
@@ -48,9 +48,9 @@ services:
   # Auth Service
   - type: web
     name: blitzy-auth-service
-    env: node
-    buildCommand: cd auth-service && npm install && npm run build
-    startCommand: cd auth-service && npm start
+    env: docker
+    dockerContext: .
+    dockerfilePath: auth-service/Dockerfile
     envVars:
       - key: NODE_ENV
         value: production
