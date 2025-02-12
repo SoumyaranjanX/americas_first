@@ -11,7 +11,12 @@
     "moduleResolution": "node16",
     "baseUrl": ".",
     "paths": {
-      "@austa/shared/*": ["../shared/src/*", "../shared/dist/*"]
+      "@austa/shared/*": [
+        "../shared/src/*",
+        "../shared/dist/*",
+        "/opt/render/project/src/shared/src/*",
+        "/opt/render/project/src/shared/dist/*"
+      ]
     },
     "esModuleInterop": true,
     "experimentalDecorators": true,
