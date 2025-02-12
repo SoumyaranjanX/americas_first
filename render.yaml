@@ -1,0 +1,87 @@
+services:
+  # Web Frontend (Next.js)
+  - type: web
+    name: blitzy-web
+    env: node
+    buildCommand: cd web && npm install && npm run build
+    startCommand: cd web && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          name: blitzy-api-gateway
+          type: web
+          property: url
+    autoDeploy: true
+
+  # API Gateway
+  - type: web
+    name: blitzy-api-gateway
+    env: node
+    buildCommand: cd api-gateway && npm install && npm run build
+    startCommand: cd api-gateway && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8000
+      - key: REDIS_HOST
+        fromService:
+          name: blitzy-redis
+          type: redis
+          property: host
+      - key: REDIS_PORT
+        value: 6379
+      - key: AUTH_SERVICE_URL
+        fromService:
+          name: blitzy-auth-service
+          type: web
+          property: url
+      - key: MONGODB_URI
+        fromService:
+          name: blitzy-mongodb
+          type: mongodb
+          property: connectionString
+    autoDeploy: true
+
+  # Auth Service
+  - type: web
+    name: blitzy-auth-service
+    env: node
+    buildCommand: cd auth-service && npm install && npm run build
+    startCommand: cd auth-service && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: REDIS_HOST
+        fromService:
+          name: blitzy-redis
+          type: redis
+          property: host
+      - key: REDIS_PORT
+        value: 6379
+      - key: MONGODB_URI
+        fromService:
+          name: blitzy-mongodb
+          type: mongodb
+          property: connectionString
+    autoDeploy: true
+
+  # MongoDB Database
+  - type: mongodb
+    name: blitzy-mongodb
+    ipAllowList: # Configure IP addresses allowed to connect
+      - source: 0.0.0.0/0
+        description: everywhere
+    plan: free # or specify your desired plan
+
+  # Redis Instance
+  - type: redis
+    name: blitzy-redis
+    ipAllowList: # Configure IP addresses allowed to connect
+      - source: 0.0.0.0/0
+        description: everywhere
+    plan: free # or specify your desired plan 
