@@ -1,11 +1,20 @@
 #!/bin/sh
 
 # Set default environment variables if not provided
-export JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:-$(cat /app/secrets/private.key)}
-export JWT_PUBLIC_KEY=${JWT_PUBLIC_KEY:-$(cat /app/secrets/public.key)}
 export AUTH_SERVICE_PORT=${AUTH_SERVICE_PORT:-4000}
 export API_GATEWAY_PORT=${PORT:-10000}
 export WEB_PORT=${WEB_PORT:-3000}
+
+# Verify required environment variables
+if [ -z "$JWT_PRIVATE_KEY" ]; then
+    echo "Error: JWT_PRIVATE_KEY environment variable is required"
+    exit 1
+fi
+
+if [ -z "$JWT_PUBLIC_KEY" ]; then
+    echo "Error: JWT_PUBLIC_KEY environment variable is required"
+    exit 1
+fi
 
 # Start auth-service in the background
 cd /app/auth-service && PORT=$AUTH_SERVICE_PORT npm start &
