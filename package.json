@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@tanstack/react-virtual": "^3.13.0",
+    "react-virtual": "^2.10.4"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' NEXT_TELEMETRY_DISABLED=1 NODE_ENV=production next build",
+    "start": "next start"
+  }
+}

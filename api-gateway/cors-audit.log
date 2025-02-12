@@ -1,0 +1,3 @@
+{"level":"info","message":"CORS request","method":"GET","path":"/health","requestId":"a1934de2-e853-4a42-bf9f-ecdb0781489b","service":"cors-middleware","userAgent":"curl/8.7.1"}
+{"level":"info","message":"CORS request","method":"GET","path":"/health","requestId":"cc253f09-01ae-498c-b931-5fc5907b999a","service":"cors-middleware","userAgent":"curl/8.7.1"}
+{"level":"info","message":"CORS request","method":"GET","path":"/health","requestId":"6c0939a8-f037-4117-8af9-a8a7fb645e56","service":"cors-middleware","userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"}

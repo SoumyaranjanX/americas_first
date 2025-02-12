@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password123
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ENV=development
+      - PORT=8000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - AUTH_SERVICE_URL=http://auth-service:4000
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/auth?authSource=admin
+    networks:
+      - app-network
+    volumes:
+      - ./shared:/app/shared
+      - ./api-gateway:/app/api-gateway
+      - /app/shared/node_modules
+      - /app/api-gateway/node_modules
+    depends_on:
+      - redis
+      - auth-service
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/auth?authSource=admin
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_URL=redis://redis:6379
+    networks:
+      - app-network
+    volumes:
+      - ./shared:/app/shared
+      - ./auth-service:/app/auth-service
+      - ./secrets:/app/secrets
+      - /app/shared/node_modules
+      - /app/auth-service/node_modules
+    depends_on:
+      - mongodb
+      - redis
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://api-gateway:8000
+    networks:
+      - app-network
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - api-gateway
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb_data: 
